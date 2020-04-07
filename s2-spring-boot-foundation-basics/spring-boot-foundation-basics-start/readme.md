@@ -69,4 +69,11 @@ mvn clean package
 java -jar traget/s2-spring-boot-foundation-basics-start.jar 
 ```
 
+## Anwendung aufrufen 
+
+
+```
+Browser localhost:8080
+```
+
 
