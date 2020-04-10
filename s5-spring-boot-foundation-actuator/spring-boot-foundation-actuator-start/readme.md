@@ -1,11 +1,11 @@
-## Aufgabe 
+## Aufgabe
+
+
 
 Der IT-Betrieb des Route-Service verlangt Laufzeitinformationen über den Route-Service, ohne die der Betrieb nicht freigegeben wird. Es sollen Informationen über den Gesundheitszustand und die Version des Route-Service bereitgestellt werden.
 
 1. Stellen Sie Health-Informationen über Ihre Anwendung bereit. Simulieren Sie dabei einen Anwendungsstatus.
 2. Stellen Sie Informationen über die Version der Anwendung bereit.
-
-
 ## Actuator Endpoints anzeigen    
 
 Sie können ein paar Endpoints aufrufen und ausprobieren 
