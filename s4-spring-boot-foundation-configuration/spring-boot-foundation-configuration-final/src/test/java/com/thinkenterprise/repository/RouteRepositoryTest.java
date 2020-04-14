@@ -21,13 +21,14 @@
 package com.thinkenterprise.repository;
 
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.thinkenterprise.domain.route.Route;
+import com.thinkenterprise.repository.RouteRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,12 +40,13 @@ public class RouteRepositoryTest {
     @Test
     public void findByDeparture() throws Exception {
         Iterable<Route> actual = repository.findByDeparture("FRA");
-        Assert.assertNotNull(actual.iterator().hasNext());
+        Assertions.assertNotNull(actual.iterator().hasNext());
+       
     }
 
     @Test
     public void findAll() throws Exception {
         Iterable<Route> actual = repository.findAll();
-        Assert.assertNotNull(actual.iterator().hasNext());
+  
     }
 }
