@@ -1,6 +1,6 @@
 package com.thinkenterprise.test;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,14 +23,14 @@ public class RouteControllerTest {
 	public void testHelloWorld() {
 		
 		String result = testRestTemplate.getForObject("/helloWorld", String.class);
-		Assert.assertTrue(result.contentEquals("Hello World"));
+		Assertions.assertTrue(result.contentEquals("Hello World"));
 
 	}
 	
 	@Test
 	public void testHelloWorldOnController() {
 		String result = routeController.helloWorld();
-		Assert.assertTrue(result.contentEquals("Hello World"));
+		Assertions.assertTrue(result.contentEquals("Hello World"));
 		
 	}
 	
