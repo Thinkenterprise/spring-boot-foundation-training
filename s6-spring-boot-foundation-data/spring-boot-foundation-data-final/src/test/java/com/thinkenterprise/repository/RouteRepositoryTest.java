@@ -24,7 +24,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,7 +49,7 @@ public class RouteRepositoryTest {
         repository.save(entity);
 
         long actual = repository.count();
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class RouteRepositoryTest {
         repository.saveAll(entities);
         
         long actual = repository.count();
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
 
@@ -73,33 +73,33 @@ public class RouteRepositoryTest {
     
         Route actual = repository.findById(103L).get();
 
-        Assert.assertEquals(expected.getFlightNumber(), actual.getFlightNumber());
-        Assert.assertEquals(expected.getDeparture(), actual.getDeparture());
-        Assert.assertEquals(expected.getDestination(), actual.getDestination());
+        Assertions.assertEquals(expected.getFlightNumber(), actual.getFlightNumber());
+        Assertions.assertEquals(expected.getDeparture(), actual.getDeparture());
+        Assertions.assertEquals(expected.getDestination(), actual.getDestination());
     }
 
     @Test
     public void findAll() throws Exception {
         Iterable<Route> actual = repository.findAll();
-        Assert.assertNotNull(actual.iterator().hasNext());
+        Assertions.assertNotNull(actual.iterator().hasNext());
     }
 
     @Test
     public void findByDeparture() throws Exception {
         Iterable<Route> actual = repository.findByDeparture("MUC");
-        Assert.assertEquals("MUC", actual.iterator().next().getDeparture());
+        Assertions.assertEquals("MUC", actual.iterator().next().getDeparture());
     }
 
     @Test
     public void queryFindByDeparture() throws Exception {
         Iterable<Route> actual = repository.queryFindByDeparture("MUC");
-        Assert.assertEquals("MUC", actual.iterator().next().getDeparture());
+        Assertions.assertEquals("MUC", actual.iterator().next().getDeparture());
     }
 
     @Test
     public void findByDestination() throws Exception {
         Iterable<Route> actual = repository.findByDestination("IAH");
-        Assert.assertEquals("IAH", actual.iterator().next().getDestination());
+        Assertions.assertEquals("IAH", actual.iterator().next().getDestination());
     }
 
     @Test
@@ -110,9 +110,9 @@ public class RouteRepositoryTest {
         repository.save(expected);
 
         Route actual = repository.findById(103L).get();
-        Assert.assertEquals(expected.getFlightNumber(), actual.getFlightNumber());
-        Assert.assertEquals(expected.getDeparture(), actual.getDeparture());
-        Assert.assertEquals(expected.getDestination(), actual.getDestination());
+        Assertions.assertEquals(expected.getFlightNumber(), actual.getFlightNumber());
+        Assertions.assertEquals(expected.getDeparture(), actual.getDeparture());
+        Assertions.assertEquals(expected.getDestination(), actual.getDestination());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class RouteRepositoryTest {
         repository.deleteById(102L);
 
         long actual = repository.count();
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -132,6 +132,6 @@ public class RouteRepositoryTest {
         repository.deleteAll();
 
         long actual = repository.count();
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 }
