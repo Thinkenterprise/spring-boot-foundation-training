@@ -26,11 +26,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thinkenterprise.domain.route.Route;
@@ -78,5 +81,12 @@ public class RouteController {
 	 @RequestMapping(value="search",method=RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
 	 public ResponseEntity<Iterable<Route>> findByDeparture(@RequestParam(value = "departure") String departure) {
 		 return new ResponseEntity<Iterable<Route>>(service.findAll(),HttpStatus.OK);
+	 }
+	 
+	 @ExceptionHandler(value = RouteNotFoundException.class)
+	 @ResponseStatus(HttpStatus.BAD_REQUEST)
+	 @ResponseBody
+	 public RouteErrorStatus exception(RouteNotFoundException exception) {
+	     return new RouteErrorStatus(6573, "Route Exception" + exception.getMessage());
 	 }
 }

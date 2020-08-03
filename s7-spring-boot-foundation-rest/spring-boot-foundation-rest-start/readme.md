@@ -72,6 +72,31 @@ Hier ist nur zwei TEST für zwei CRUD-Operationen beispielhaft gezeigt.
 
 ## Validierung der Parameter 
 
+Damit die Annotation gesetzt werden können, müssen sie einen weiteren Starter hinzufügen. 
+
+```
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-validation</artifactId>
+	</dependency>
+```
+
+Fügen Sie nun die Annotationen den Domain-Klassen hinzu, die für die Prüfung benötigt werden. 
+
+```java
+	@Entity
+	public class Route extends AbstractEntity {
+
+		@NotNull
+		private String flightNumber;
+	
+		@Size(max=20)
+		private String departure;
+	
+
+```
+
+Nun schalten Sie noch die Validierung über @Validated ein. 
 
 ```java
 	@RequestMapping(method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
@@ -87,6 +112,20 @@ Test finden.
 
 ## Exception Handler 
 
+Sie können zwei Exception Handler definieren
+
+Einen Exception Handler auf fachlciher eben im RouteController 
+
+```java
+ @ExceptionHandler(value = RouteNotFoundException.class)
+	 @ResponseStatus(HttpStatus.BAD_REQUEST)
+	 @ResponseBody
+	 public RouteErrorStatus exception(RouteNotFoundException exception) {
+	     return new RouteErrorStatus(6573, "Route Exception" + exception.getMessage());
+	 }
+```
+
+und einen technischen Exception Handler über das Controler Advice, dass global für alle Controller gültig ist. 
 
 ```java
 @ControllerAdvice
@@ -101,8 +140,5 @@ public class PersistenceControllerAdvice {
     }
 }
 ```
-
-Dafür ist nicht zwingend ein Test zu implementieren. Nur wenn Sie am Ende noch Zeit haben. In der Musterlösung können Sie später diesen 
-Test finden.
 
 
