@@ -1,43 +1,29 @@
-buildscript {
-    ext {
-        springBootVersion = '1.5.8.RELEASE'
-    }
-    repositories {
-        maven { url "http://repo.spring.io/release" }
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'eclipse'
+	id 'idea'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-
-jar {
-    baseName = 'spring-boot-basics-basic'
-    version = '0.0.1-SNAPSHOT'
-}
-
-sourceCompatibility = 1.8
+version = '0.0.1-SNAPSHOT'
 targetCompatibility = 1.8
+sourceCompatibility = '1.8'
 
 repositories {
-    maven { url "http://repo.spring.io/release" }
-    mavenCentral()
+maven { url "http://repo.spring.io/release" }
+	mavenCentral()
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-activemq")
-    compile("com.fasterxml.jackson.core:jackson-databind")
-    compile("com.fasterxml.jackson.core:jackson-datatype-jsr310")
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+	implementation 'org.springframework.boot:spring-boot-starter-activemq'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 }
 
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+test {
+	useJUnitPlatform()
 }
