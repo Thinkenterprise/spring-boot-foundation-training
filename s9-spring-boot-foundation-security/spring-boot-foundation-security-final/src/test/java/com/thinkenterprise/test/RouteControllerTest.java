@@ -4,7 +4,7 @@ package com.thinkenterprise.test;
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +30,8 @@ public class RouteControllerTest {
     	        		testRestTemplate.exchange("/routes",
     	                            HttpMethod.GET, null, new ParameterizedTypeReference<List<Route>>(){});
     	        
-    	        Assert.assertEquals (HttpStatus.OK, routeResponse.getStatusCode());
-    	        Assert.assertNotNull (routeResponse.getBody());
+    	        Assertions.assertEquals (HttpStatus.OK, routeResponse.getStatusCode());
+    	        Assertions.assertNotNull (routeResponse.getBody());
     	       
     }
    
