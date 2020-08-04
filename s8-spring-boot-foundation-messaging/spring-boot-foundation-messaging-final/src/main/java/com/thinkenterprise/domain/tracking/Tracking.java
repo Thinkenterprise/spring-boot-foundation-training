@@ -30,6 +30,7 @@ public class Tracking  {
     private LocalDateTime currentTime;
     private FlightStatus status;
 
+
     
     public Long getRouteId() {
         return routeId;

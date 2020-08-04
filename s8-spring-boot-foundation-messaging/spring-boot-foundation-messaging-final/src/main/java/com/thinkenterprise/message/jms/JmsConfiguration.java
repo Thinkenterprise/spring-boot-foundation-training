@@ -56,13 +56,9 @@ public class JmsConfiguration {
         return converter;
     }
     
-   
     @Bean
     public Queue queue() {
-
       return new ActiveMQQueue("FlightAwareTracking");
-
     }
-
-     
+   
 }

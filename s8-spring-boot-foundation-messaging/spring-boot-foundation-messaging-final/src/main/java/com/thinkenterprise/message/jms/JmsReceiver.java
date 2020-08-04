@@ -27,9 +27,21 @@ import com.thinkenterprise.domain.tracking.Tracking;
 
 @Component
 public class JmsReceiver {
+	    
+    private Tracking tracking;
+    
+    public Tracking getTracking() {
+		return tracking;
+	}
+
+
+	public void setTracking(Tracking tracking) {
+		this.tracking = tracking;
+	}
     
     @JmsListener(destination = "FlightAwareTracking")
     public void receiveMessage(Tracking tracking) {
        System.out.println(tracking);
+       setTracking(tracking);
     }
 }
