@@ -19,9 +19,12 @@
 
 package com.thinkenterprise.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkenterprise.domain.route.Route;
 
@@ -30,6 +33,7 @@ import com.thinkenterprise.domain.route.Route;
 
 public interface RouteRepository extends CrudRepository<Route, Long> {
     
+	@Transactional(transactionManager = "transactionManager", timeout = 1000)
 	Iterable<Route> findByDeparture(String departure);
 
     @Query(value = "select r from Route r where r.departure = :departure")
@@ -37,4 +41,6 @@ public interface RouteRepository extends CrudRepository<Route, Long> {
 
     @Query(value = "select r from Route r where r.destination = :destination")
     Iterable<Route> findByDestination(@Param("destination") String destination);
+    
+    List<Route> findAll();
 }

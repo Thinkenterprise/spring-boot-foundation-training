@@ -22,15 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import com.sun.istack.NotNull;
 import com.thinkenterprise.domain.core.AbstractEntity;
 
 @Entity
 public class Route extends AbstractEntity {
 
+	@Column(nullable = false)
 	private String flightNumber;
 	private String departure;
 	private String destination;
