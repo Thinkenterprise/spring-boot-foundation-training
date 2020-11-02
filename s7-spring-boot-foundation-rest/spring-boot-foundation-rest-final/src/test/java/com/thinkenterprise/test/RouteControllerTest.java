@@ -35,7 +35,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.thinkenterprise.controller.RouteErrorStatus;
+import com.thinkenterprise.domain.core.Problem;
 import com.thinkenterprise.domain.route.Flight;
 import com.thinkenterprise.domain.route.Route;
 import com.thinkenterprise.repository.RouteRepository;
@@ -134,11 +134,12 @@ public class RouteControllerTest {
 
 		Map<String, String> keys = new HashMap<>();
 		keys.put("id", "110000");
-		ResponseEntity<RouteErrorStatus> error = this.restTemplate.getForEntity("/routes/{id}", RouteErrorStatus.class,
-				keys);
+		
+		ResponseEntity<Problem> problem = this.restTemplate.getForEntity("/routes/{id}", Problem.class,keys);
 
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, error.getStatusCode());
-		Assertions.assertEquals(6573, error.getBody().getFunctionalErrorCode());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getBody().getStatus());
+		
 	}
 	
 	
@@ -147,11 +148,12 @@ public class RouteControllerTest {
 
 		Map<String, String> keys = new HashMap<>();
 		keys.put("id", "120000");
-		ResponseEntity<RouteErrorStatus> error = this.restTemplate.getForEntity("/routes/{id}", RouteErrorStatus.class,
+		
+		ResponseEntity<Problem> problem = this.restTemplate.getForEntity("/routes/{id}", Problem.class,
 				keys);
 
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, error.getStatusCode());
-		Assertions.assertEquals(1000, error.getBody().getFunctionalErrorCode());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getBody().getStatus());
 	}
 
 	@Test

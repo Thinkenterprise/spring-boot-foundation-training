@@ -117,11 +117,14 @@ Sie können zwei Exception Handler definieren
 Einen Exception Handler auf fachlciher eben im RouteController 
 
 ```java
- @ExceptionHandler(value = RouteNotFoundException.class)
+  @ExceptionHandler(value = RouteNotFoundException.class)
 	 @ResponseStatus(HttpStatus.BAD_REQUEST)
 	 @ResponseBody
-	 public RouteErrorStatus exception(RouteNotFoundException exception) {
-	     return new RouteErrorStatus(6573, "Route Exception" + exception.getMessage());
+	 public Problem exception(RouteNotFoundException exception) {
+	     return new Problem(URI.create("http://thinkenterprise.com"), 
+	    		            "Route not found", 
+	    		            HttpStatus.BAD_REQUEST, 
+	    		            exception.getMessage());
 	 }
 ```
 
@@ -134,8 +137,11 @@ public class PersistenceControllerAdvice {
     @ExceptionHandler(value = PersistenceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public RouteErrorStatus exception(PersistenceException exception) {
-        return new RouteErrorStatus(1000L, "Persistence Exception" + exception.getMessage());
+    public Problem exception(PersistenceException exception) {
+		return new Problem(URI.create("http://thinkenterprise.com"), 
+	            "Persistence Exception", 
+	            HttpStatus.BAD_REQUEST, 
+	            exception.getMessage());
 
     }
 }

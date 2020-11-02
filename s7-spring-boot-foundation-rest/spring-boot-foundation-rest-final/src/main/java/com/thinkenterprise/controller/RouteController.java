@@ -19,6 +19,8 @@
 
 package com.thinkenterprise.controller;
 
+import java.net.URI;
+
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thinkenterprise.domain.core.Problem;
 import com.thinkenterprise.domain.route.Route;
+import com.thinkenterprise.domain.route.RouteNotFoundException;
 import com.thinkenterprise.service.RouteService;
 
 
@@ -86,7 +90,11 @@ public class RouteController {
 	 @ExceptionHandler(value = RouteNotFoundException.class)
 	 @ResponseStatus(HttpStatus.BAD_REQUEST)
 	 @ResponseBody
-	 public RouteErrorStatus exception(RouteNotFoundException exception) {
-	     return new RouteErrorStatus(6573, "Route Exception" + exception.getMessage());
+	 public Problem exception(RouteNotFoundException exception) {
+	     return new Problem(URI.create("http://thinkenterprise.com"), 
+	    		            "Route not found", 
+	    		            HttpStatus.BAD_REQUEST, 
+	    		            exception.getMessage());
 	 }
+	 	 
 }

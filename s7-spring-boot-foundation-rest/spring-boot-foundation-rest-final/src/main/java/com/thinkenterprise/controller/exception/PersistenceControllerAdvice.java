@@ -17,7 +17,9 @@
  * @author Michael Schaefer
  */
 
-package com.thinkenterprise.controller;
+package com.thinkenterprise.controller.exception;
+
+import java.net.URI;
 
 import javax.persistence.PersistenceException;
 
@@ -27,14 +29,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.thinkenterprise.domain.core.Problem;
+
 @ControllerAdvice
 public class PersistenceControllerAdvice {
     
 	@ExceptionHandler(value = PersistenceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public RouteErrorStatus exception(PersistenceException exception) {
-        return new RouteErrorStatus(1000L, "Persistence Exception" + exception.getMessage());
+    public Problem exception(PersistenceException exception) {
+		return new Problem(URI.create("http://thinkenterprise.com"), 
+	            "Persistence Exception", 
+	            HttpStatus.BAD_REQUEST, 
+	            exception.getMessage());
 
     }
 }
