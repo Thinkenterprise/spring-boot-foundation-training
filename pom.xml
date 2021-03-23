@@ -1,0 +1,29 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.thinkenterprise</groupId>
+    <artifactId>s0-spring-boot-foundation-meta</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+		<module>s2-spring-boot-foundation-basics/spring-boot-foundation-basics-final</module>
+		<module>s2-spring-boot-foundation-basics/spring-boot-foundation-basics-final-tomcat</module>
+		<!-- module>s2-spring-boot-foundation-basics/spring-boot-foundation-basics-start</module -->
+		<module>s3-spring-boot-foundation-test/spring-boot-foundation-test-final</module>
+		<module>s3-spring-boot-foundation-test/spring-boot-foundation-test-start</module>
+		<module>s4-spring-boot-foundation-configuration/spring-boot-foundation-configuration-final</module>
+		<module>s4-spring-boot-foundation-configuration/spring-boot-foundation-configuration-start</module>
+		<module>s5-spring-boot-foundation-actuator/spring-boot-foundation-actuator-final</module>
+		<module>s5-spring-boot-foundation-actuator/spring-boot-foundation-actuator-start</module>
+		<module>s6-spring-boot-foundation-data/spring-boot-foundation-data-final</module>
+		<!-- module>s6-spring-boot-foundation-data/spring-boot-foundation-data-start</module -->
+		<module>s7-spring-boot-foundation-rest/spring-boot-foundation-rest-final</module>
+		<module>s7-spring-boot-foundation-rest/spring-boot-foundation-rest-start</module>
+		<module>s8-spring-boot-foundation-messaging/spring-boot-foundation-messaging-final</module>
+		<module>s8-spring-boot-foundation-messaging/spring-boot-foundation-messaging-start</module>
+		<module>s9-spring-boot-foundation-security/spring-boot-foundation-security-final</module>
+		<module>s9-spring-boot-foundation-security/spring-boot-foundation-security-start</module>
+	</modules>
+</project>

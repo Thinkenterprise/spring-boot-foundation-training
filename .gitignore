@@ -1,0 +1,17 @@
+**/target/
+**/bin/
+**/build/
+**/gradle/
+**/.gradle/
+**/.settings/
+**/.vscode
+**/.idea/
+**/.apt_generated/
+
+**/*~
+**/.classpath
+**/.project
+**/.DS_Store
+**/*.iml
+**/*.bak
+**/dependency-reduced-pom.xml
