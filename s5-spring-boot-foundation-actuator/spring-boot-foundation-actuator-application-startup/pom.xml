@@ -13,7 +13,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.thinkenterprise</groupId>
-	<artifactId>s2-spring-boot-foundation-basics-final</artifactId>
+	<artifactId>s5-spring-boot-foundation-actuator-application-startup</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -37,6 +37,11 @@
 	</dependencyManagement>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

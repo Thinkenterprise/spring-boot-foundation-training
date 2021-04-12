@@ -1,3 +1,4 @@
+**/*.jfr/
 .vscode
 .DS_Store
 .gradle/

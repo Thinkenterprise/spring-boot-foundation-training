@@ -15,6 +15,7 @@
 		<module>s3-spring-boot-foundation-test/spring-boot-foundation-test-start</module>
 		<module>s4-spring-boot-foundation-configuration/spring-boot-foundation-configuration-final</module>
 		<module>s4-spring-boot-foundation-configuration/spring-boot-foundation-configuration-start</module>
+		<module>s5-spring-boot-foundation-actuator/spring-boot-foundation-actuator-application-startup</module>
 		<module>s5-spring-boot-foundation-actuator/spring-boot-foundation-actuator-final</module>
 		<module>s5-spring-boot-foundation-actuator/spring-boot-foundation-actuator-start</module>
 		<module>s6-spring-boot-foundation-data/spring-boot-foundation-data-final</module>
