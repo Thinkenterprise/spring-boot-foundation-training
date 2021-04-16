@@ -25,6 +25,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration;
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 
 import com.thinkenterprise.customize.HelloWorldSpringApplicationContextInitializer;
 import com.thinkenterprise.customize.HelloWorldSpringApplicationEventListener;
@@ -39,6 +40,7 @@ public class Application implements ApplicationRunner  {
     	
     	springApplication.addListeners(new HelloWorldSpringApplicationEventListener());
     	springApplication.addInitializers(new HelloWorldSpringApplicationContextInitializer());
+    	springApplication.setApplicationStartup(new BufferingApplicationStartup(1000));
     	springApplication.run(args);    	
 
     }

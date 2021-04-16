@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active:
+    - test
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile:
+      - test
+route:
+  count: 2
+        
+---
+
+spring:
+  config:
+    activate:
+      on-profile:
+      - production 
+
+route:
+  count: 5           
+     
