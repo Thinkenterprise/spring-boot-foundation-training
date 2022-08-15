@@ -34,25 +34,24 @@ Der Aufruf dürfte nicht mehr funktionieren
 
 
 ```java
-@Component
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
-	@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        
-   	 auth.inMemoryAuthentication()
-        .withUser("user")
-        .password(passwordEncoder().encode("password"))
-        .roles("ADMIN");
-    }
-}
 
+	@Bean
+	public InMemoryUserDetailsManager userDetailsService() {
+		UserDetails user = User.withUsername("user")
+				               .password(passwordEncoder().encode("password"))
+				               .roles("ADMIN")
+				               .build();
+		return new InMemoryUserDetailsManager(user);
+	}
+
+}
 ```
 
 ## Security Configuration für Autorisierung 
