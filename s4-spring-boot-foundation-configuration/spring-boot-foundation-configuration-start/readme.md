@@ -154,13 +154,13 @@ public class RouteRepositoryTest {
     @Test
     public void findByDeparture() throws Exception {
         Iterable<Route> actual = repository.findByDeparture("FRA");
-        Assert.assertNotNull(actual.iterator().hasNext());
+        Assertions.assertNotNull(actual.iterator().hasNext());
     }
 
     @Test
     public void findAll() throws Exception {
         Iterable<Route> actual = repository.findAll();
-        Assert.assertNotNull(actual.iterator().hasNext());
+        Assertions.assertNotNull(actual.iterator().hasNext());
     }
 }
 ```

@@ -55,14 +55,14 @@ public class RouteControllerTest {
 	public void testHelloWorld() {
 		
 		String result = testRestTemplate.getForObject("/helloWorld", String.class);
-		Assert.assertTrue(result.contentEquals("Hello World"));
+		Assertions.assertTrue(result.contentEquals("Hello World"));
 
 	}
 	
 	@Test
 	public void testHelloWorldOnController() {
 		String result = routeController.helloWorld();
-		Assert.assertTrue(result.contentEquals("Hello World"));
+		Assertions.assertTrue(result.contentEquals("Hello World"));
 		
 	}
 }

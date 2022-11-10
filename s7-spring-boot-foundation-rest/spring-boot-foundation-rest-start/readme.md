@@ -46,9 +46,9 @@ Hier ist nur zwei TEST für zwei CRUD-Operationen beispielhaft gezeigt.
 		keys.put("id", "101");
 
 		ResponseEntity<Route> routeEntity = this.restTemplate.getForEntity("/routes/{id}", Route.class, keys);
-		Assert.assertEquals(HttpStatus.OK, routeEntity.getStatusCode());
-		Assert.assertNotNull(routeEntity.getBody());
-		Assert.assertEquals(101L, routeEntity.getBody().getId().longValue());
+		Assertions.assertEquals(HttpStatus.OK, routeEntity.getStatusCode());
+		Assertions.assertNotNull(routeEntity.getBody());
+		Assertions.assertEquals(101L, routeEntity.getBody().getId().longValue());
 
 	}
 	
@@ -61,9 +61,9 @@ Hier ist nur zwei TEST für zwei CRUD-Operationen beispielhaft gezeigt.
 
 		Iterable<Route> iterable = routeResponse.getBody();
 
-		Assert.assertEquals(HttpStatus.OK, routeResponse.getStatusCode());
-		Assert.assertNotNull(routeResponse.getBody());
-		Assert.assertNotNull(iterable.iterator().hasNext());
+		Assertions.assertEquals(HttpStatus.OK, routeResponse.getStatusCode());
+		Assertions.assertNotNull(routeResponse.getBody());
+		Assertions.assertNotNull(iterable.iterator().hasNext());
 
 	}
 

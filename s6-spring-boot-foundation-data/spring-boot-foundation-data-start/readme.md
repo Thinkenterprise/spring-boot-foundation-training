@@ -70,7 +70,7 @@ public class RouteRepositoryDataJpaTest {
     @Test
     public void findAll() throws Exception {
         Iterable<Route> actual = repository.findAll();
-        Assert.assertNotNull(actual.iterator().hasNext());
+        Assertions.assertNotNull(actual.iterator().hasNext());
     }
 
 }
