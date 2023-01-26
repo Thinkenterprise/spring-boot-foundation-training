@@ -21,8 +21,6 @@ package com.thinkenterprise.controller;
 
 import java.net.URI;
 
-import javax.persistence.PersistenceException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +40,8 @@ import com.thinkenterprise.domain.core.Problem;
 import com.thinkenterprise.domain.route.Route;
 import com.thinkenterprise.domain.route.RouteNotFoundException;
 import com.thinkenterprise.service.RouteService;
+
+import jakarta.persistence.PersistenceException;
 
 
 @RestController

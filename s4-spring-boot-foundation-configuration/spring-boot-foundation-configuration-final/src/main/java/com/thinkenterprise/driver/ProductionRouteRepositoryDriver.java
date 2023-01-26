@@ -24,11 +24,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
 
 import com.thinkenterprise.domain.route.Route;
+
+import jakarta.annotation.PostConstruct;
 
 public class ProductionRouteRepositoryDriver implements RouteRepositoryDriver {
 
