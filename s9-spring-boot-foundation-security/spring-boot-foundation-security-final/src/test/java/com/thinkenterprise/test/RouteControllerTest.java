@@ -20,19 +20,43 @@ import com.thinkenterprise.domain.route.Route;
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class RouteControllerTest {
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+	@Autowired
+	private TestRestTemplate testRestTemplate;
 
-    @Test
-    public void getAll() throws IOException { 
-    	
-    	        ResponseEntity<List<Route>> routeResponse =
-    	        		testRestTemplate.exchange("/routes",
-    	                            HttpMethod.GET, null, new ParameterizedTypeReference<List<Route>>(){});
-    	        
-    	        Assertions.assertEquals (HttpStatus.OK, routeResponse.getStatusCode());
-    	        Assertions.assertNotNull (routeResponse.getBody());
-    	       
-    }
-   
+	@Test
+	public void getAll_Authorized() throws IOException {
+
+		final ResponseEntity<List<Route>> routeResponse =
+				testRestTemplate.exchange("/routes",
+						HttpMethod.GET, null, new ParameterizedTypeReference<List<Route>>(){});
+
+		Assertions.assertEquals (HttpStatus.OK, routeResponse.getStatusCode());
+		Assertions.assertNotNull (routeResponse.getBody());
+
+	}
+
+	@Test
+	public void getAll_Unauthorized() {
+
+		testRestTemplate = testRestTemplate.withBasicAuth("user2", "something");
+
+		final ResponseEntity<List<Route>> routeResponse =
+				testRestTemplate.exchange("/routes",
+						HttpMethod.GET, null, new ParameterizedTypeReference<List<Route>>(){});
+
+		Assertions.assertEquals (HttpStatus.UNAUTHORIZED, routeResponse.getStatusCode());
+	}
+
+	@Test
+	public void getAll_Authorized2() throws IOException {
+
+		final ResponseEntity<List<Route>> routeResponse = testRestTemplate.exchange("/routes", HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<Route>>() {
+				});
+
+		Assertions.assertEquals(HttpStatus.OK, routeResponse.getStatusCode());
+		Assertions.assertNotNull(routeResponse.getBody());
+
+	}
+
 }
