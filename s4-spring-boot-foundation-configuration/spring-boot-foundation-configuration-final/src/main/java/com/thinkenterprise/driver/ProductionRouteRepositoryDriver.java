@@ -33,7 +33,7 @@ import jakarta.annotation.PostConstruct;
 public class ProductionRouteRepositoryDriver implements RouteRepositoryDriver {
 
 	@Value("${route.count}")
-    private short routeCount = 5;
+    private short routeCount;
 
     private List<Route> routeList = new ArrayList<>();
     private List<String> flightNumberList = new ArrayList<>();
