@@ -33,7 +33,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientResponseException;
 
 import com.thinkenterprise.domain.core.Problem;
 import com.thinkenterprise.domain.route.Flight;
@@ -67,7 +69,7 @@ public class RouteControllerTest {
 		Assertions.assertEquals("LH2345", result.getBody().getFlightNumber());
 
 	}
-	
+
 	@Test
 	public void postValidated() {
 
@@ -82,10 +84,9 @@ public class RouteControllerTest {
 		ResponseEntity<Route> result = restTemplate.postForEntity("/routes", route, Route.class);
 
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
-		
 
 	}
-	
+
 	@Test
 	public void update() {
 
@@ -104,16 +105,16 @@ public class RouteControllerTest {
 	}
 
 	@Test
-    public void delete() {
-    	  	
-    	Map<String, String> keys = new HashMap<>();
-        keys.put("id", "103");
- 
-        restTemplate.delete("/routes/{id}", keys);          
-          
-        Optional optional = routeRepository.findById(103L);
-        
-        Assertions.assertTrue(!optional.isPresent());
+	public void delete() {
+
+		Map<String, String> keys = new HashMap<>();
+		keys.put("id", "103");
+
+		restTemplate.delete("/routes/{id}", keys);
+
+		Optional optional = routeRepository.findById(103L);
+
+		Assertions.assertTrue(!optional.isPresent());
 	}
 
 	@Test
@@ -129,31 +130,60 @@ public class RouteControllerTest {
 
 	}
 
+	// The old implementation of the test based on the Problem Details based on the
+	// Project
+	/*
+	 * @Test public void getNotFound() throws Exception {
+	 * 
+	 * Map<String, String> keys = new HashMap<>(); keys.put("id", "110000");
+	 * 
+	 * ResponseEntity<Problem> problem =
+	 * this.restTemplate.getForEntity("/routes/{id}", Problem.class,keys);
+	 * 
+	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
+	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST,
+	 * problem.getBody().getStatus());
+	 * 
+	 * }
+	 * 
+	 * 
+	 * @Test public void getPersisctenceException() throws Exception {
+	 * 
+	 * Map<String, String> keys = new HashMap<>(); keys.put("id", "120000");
+	 * 
+	 * ResponseEntity<Problem> problem =
+	 * this.restTemplate.getForEntity("/routes/{id}", Problem.class, keys);
+	 * 
+	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
+	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST,
+	 * problem.getBody().getStatus()); }
+	 */
+
+	// The old implementation of the test based on the Problem Details provided by spring 6.0
+
 	@Test
 	public void getNotFound() throws Exception {
 
 		Map<String, String> keys = new HashMap<>();
 		keys.put("id", "110000");
-		
-		ResponseEntity<Problem> problem = this.restTemplate.getForEntity("/routes/{id}", Problem.class,keys);
+
+		ResponseEntity<ProblemDetail> problem = this.restTemplate.getForEntity("/routes/{id}", ProblemDetail.class, keys);
 
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getBody().getStatus());
-		
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), problem.getBody().getStatus());
+
 	}
-	
-	
+
 	@Test
 	public void getPersisctenceException() throws Exception {
 
 		Map<String, String> keys = new HashMap<>();
 		keys.put("id", "120000");
-		
-		ResponseEntity<Problem> problem = this.restTemplate.getForEntity("/routes/{id}", Problem.class,
-				keys);
+
+		ResponseEntity<ProblemDetail> problem = this.restTemplate.getForEntity("/routes/{id}", ProblemDetail.class, keys);
 
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getBody().getStatus());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), problem.getBody().getStatus());
 	}
 
 	@Test

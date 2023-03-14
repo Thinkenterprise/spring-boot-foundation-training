@@ -20,12 +20,16 @@
 package com.thinkenterprise.controller;
 
 import java.net.URI;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.thinkenterprise.domain.core.Problem;
 import com.thinkenterprise.domain.route.Route;
@@ -60,8 +65,13 @@ public class RouteController {
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Route> get(@PathVariable(value = "id") Long id) {
-		if(id==110000L) throw new RouteNotFoundException();
+		if(id==110000L) throw new RouteNotFoundException("Route not Found Exception");
 		if(id==120000L) throw new PersistenceException("Route Get Persistence Exception");
+		if(id==130000L) throw new ErrorResponseException(HttpStatus.BAD_REQUEST, new RuntimeException("RuntimeException"));
+		if(id==140000L) return new ResponseEntity<Route>(new Route(),HttpStatus.BAD_REQUEST); 
+		
+		
+		
 		return new ResponseEntity<Route>(service.findById(id),HttpStatus.OK); 
 	 }
 	
@@ -87,6 +97,9 @@ public class RouteController {
 		 return new ResponseEntity<Iterable<Route>>(service.findAll(),HttpStatus.OK);
 	 }
 	 
+	 
+	 // Thats the old Implementation based on Problem Details provided by the project 
+	 /*
 	 @ExceptionHandler(value = RouteNotFoundException.class)
 	 @ResponseStatus(HttpStatus.BAD_REQUEST)
 	 @ResponseBody
@@ -96,5 +109,26 @@ public class RouteController {
 	    		            HttpStatus.BAD_REQUEST, 
 	    		            exception.getMessage());
 	 }
+	 */
+	 
+	 // Thats the new Implementation based on Problem Details provided by Spring 6.0
+	 @ExceptionHandler(value = RouteNotFoundException.class)
+	 @ResponseStatus(HttpStatus.BAD_REQUEST)
+	 ProblemDetail hndleException(RouteNotFoundException exception) {
+	        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+	        problemDetail.setType(URI.create("http://thinkenterprise.com"));
+	        problemDetail.setTitle( "Route not found");
+	        problemDetail.setDetail(exception.getMessage());
+	        
+	        return problemDetail;
+	 }
 	 	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 }

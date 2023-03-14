@@ -22,26 +22,31 @@ package com.thinkenterprise.controller.exception;
 import java.net.URI;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.thinkenterprise.domain.core.Problem;
+import com.thinkenterprise.domain.route.RouteNotFoundException;
 
 import jakarta.persistence.PersistenceException;
 
 @ControllerAdvice
-public class PersistenceControllerAdvice {
+public class PersistenceControllerAdvice extends ResponseEntityExceptionHandler {
     
+
 	@ExceptionHandler(value = PersistenceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public Problem exception(PersistenceException exception) {
-		return new Problem(URI.create("http://thinkenterprise.com"), 
-	            "Persistence Exception", 
-	            HttpStatus.BAD_REQUEST, 
-	            exception.getMessage());
+    public ProblemDetail exception(PersistenceException exception) {
+		
+		        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		        problemDetail.setType(URI.create("http://thinkenterprise.com/PersistenceException"));
+		        problemDetail.setTitle( "General Persistence Exception");
+		        problemDetail.setDetail(exception.getMessage());
+		        return problemDetail;
+		 }
 
-    }
 }
