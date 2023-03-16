@@ -129,15 +129,9 @@ unter **target** auszuführen.
 
 
 
+# Addidional Infromation about GraalVM 
 
-
-
-
-
-
-
-
-
+Ist für die Übung nicht relvant sondern lediglich zusatzinformation für die Trainer 
 
 
 Für eine native Compilierung ist zuvor die Installation der GraalVM notwendig. 
@@ -154,11 +148,5 @@ Dazu sind die folgenden Schritte notwendig:
 
 export PATH=$PATH:/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home/bin:/opt/apache-maven/bin
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java17-22.3.1/Contents/Home
-
-
-```
-mvn -Pnative spring-boot:build-image
-```
-
 
 

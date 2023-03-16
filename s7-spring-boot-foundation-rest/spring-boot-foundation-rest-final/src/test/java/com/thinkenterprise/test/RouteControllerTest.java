@@ -130,36 +130,6 @@ public class RouteControllerTest {
 
 	}
 
-	// The old implementation of the test based on the Problem Details based on the
-	// Project
-	/*
-	 * @Test public void getNotFound() throws Exception {
-	 * 
-	 * Map<String, String> keys = new HashMap<>(); keys.put("id", "110000");
-	 * 
-	 * ResponseEntity<Problem> problem =
-	 * this.restTemplate.getForEntity("/routes/{id}", Problem.class,keys);
-	 * 
-	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
-	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST,
-	 * problem.getBody().getStatus());
-	 * 
-	 * }
-	 * 
-	 * 
-	 * @Test public void getPersisctenceException() throws Exception {
-	 * 
-	 * Map<String, String> keys = new HashMap<>(); keys.put("id", "120000");
-	 * 
-	 * ResponseEntity<Problem> problem =
-	 * this.restTemplate.getForEntity("/routes/{id}", Problem.class, keys);
-	 * 
-	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
-	 * Assertions.assertEquals(HttpStatus.BAD_REQUEST,
-	 * problem.getBody().getStatus()); }
-	 */
-
-	// The old implementation of the test based on the Problem Details provided by spring 6.0
 
 	@Test
 	public void getNotFound() throws Exception {

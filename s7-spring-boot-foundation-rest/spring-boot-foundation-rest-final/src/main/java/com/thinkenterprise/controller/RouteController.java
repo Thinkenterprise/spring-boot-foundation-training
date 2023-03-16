@@ -48,87 +48,62 @@ import com.thinkenterprise.service.RouteService;
 
 import jakarta.persistence.PersistenceException;
 
-
 @RestController
 @RequestMapping("routes")
 public class RouteController {
 
-    @Autowired
-    private RouteService service;
+	@Autowired
+	private RouteService service;
 
-  
-	@RequestMapping(method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Iterable<Route>> getAll() {
 		Iterable<Route> result = service.findAll();
-		return new ResponseEntity<Iterable<Route>>(service.findAll(),HttpStatus.OK);
+		return new ResponseEntity<Iterable<Route>>(service.findAll(), HttpStatus.OK);
 	}
-	
-	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Route> get(@PathVariable(value = "id") Long id) {
-		if(id==110000L) throw new RouteNotFoundException("Route not Found Exception");
-		if(id==120000L) throw new PersistenceException("Route Get Persistence Exception");
-		if(id==130000L) throw new ErrorResponseException(HttpStatus.BAD_REQUEST, new RuntimeException("RuntimeException"));
-		if(id==140000L) return new ResponseEntity<Route>(new Route(),HttpStatus.BAD_REQUEST); 
-		
-		
-		
-		return new ResponseEntity<Route>(service.findById(id),HttpStatus.OK); 
-	 }
-	
-	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable(value = "id") Long id) {
-		service.deleteById(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);   	
+		if (id == 110000L)
+			throw new RouteNotFoundException("Route not Found Exception");
+		if (id == 120000L)
+			throw new PersistenceException("Route Get Persistence Exception");
+		if (id == 130000L)
+			throw new ErrorResponseException(HttpStatus.BAD_REQUEST, new RuntimeException("RuntimeException"));
+
+		return new ResponseEntity<Route>(service.findById(id), HttpStatus.OK);
 	}
-	
-	@RequestMapping(method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> put(@Validated @RequestBody Route entity) {		
+
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable(value = "id") Long id) {
+		service.deleteById(id);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> put(@Validated @RequestBody Route entity) {
 		service.save(entity);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);    
-	}	
-	
-	@RequestMapping(method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Route> post(@Validated @RequestBody Route entity) {	
-	    return new ResponseEntity<Route>(service.save(entity),HttpStatus.CREATED);
-	}	
-	
-	 @RequestMapping(value="search",method=RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
-	 public ResponseEntity<Iterable<Route>> findByDeparture(@RequestParam(value = "departure") String departure) {
-		 return new ResponseEntity<Iterable<Route>>(service.findAll(),HttpStatus.OK);
-	 }
-	 
-	 
-	 // Thats the old Implementation based on Problem Details provided by the project 
-	 /*
-	 @ExceptionHandler(value = RouteNotFoundException.class)
-	 @ResponseStatus(HttpStatus.BAD_REQUEST)
-	 @ResponseBody
-	 public Problem exception(RouteNotFoundException exception) {
-	     return new Problem(URI.create("http://thinkenterprise.com"), 
-	    		            "Route not found", 
-	    		            HttpStatus.BAD_REQUEST, 
-	    		            exception.getMessage());
-	 }
-	 */
-	 
-	 // Thats the new Implementation based on Problem Details provided by Spring 6.0
-	 @ExceptionHandler(value = RouteNotFoundException.class)
-	 @ResponseStatus(HttpStatus.BAD_REQUEST)
-	 ProblemDetail hndleException(RouteNotFoundException exception) {
-	        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-	        problemDetail.setType(URI.create("http://thinkenterprise.com"));
-	        problemDetail.setTitle( "Route not found");
-	        problemDetail.setDetail(exception.getMessage());
-	        
-	        return problemDetail;
-	 }
-	 	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Route> post(@Validated @RequestBody Route entity) {
+		return new ResponseEntity<Route>(service.save(entity), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Iterable<Route>> findByDeparture(@RequestParam(value = "departure") String departure) {
+		return new ResponseEntity<Iterable<Route>>(service.findAll(), HttpStatus.OK);
+	}
+
+	@ExceptionHandler(value = RouteNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	ProblemDetail hndleException(RouteNotFoundException exception) {
+		ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		problemDetail.setType(URI.create("http://thinkenterprise.com/RouteNotFoundException"));
+		problemDetail.setTitle("Route not found");
+		problemDetail.setDetail(exception.getMessage());
+
+		return problemDetail;
+	}
+
 }

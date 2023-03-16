@@ -114,37 +114,41 @@ Test finden.
 
 Sie können zwei Exception Handler definieren
 
-Einen Exception Handler auf fachlciher eben im RouteController 
+Einen Exception Handler auf fachlicher eben im RouteController 
 
 ```java
-  @ExceptionHandler(value = RouteNotFoundException.class)
-	 @ResponseStatus(HttpStatus.BAD_REQUEST)
-	 @ResponseBody
-	 public Problem exception(RouteNotFoundException exception) {
-	     return new Problem(URI.create("http://thinkenterprise.com"), 
-	    		            "Route not found", 
-	    		            HttpStatus.BAD_REQUEST, 
-	    		            exception.getMessage());
-	 }
+ @ExceptionHandler(value = RouteNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	ProblemDetail hndleException(RouteNotFoundException exception) {
+		ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		problemDetail.setType(URI.create("http://thinkenterprise.com/RouteNotFoundException"));
+		problemDetail.setTitle("Route not found");
+		problemDetail.setDetail(exception.getMessage());
+
+		return problemDetail;
+	}
 ```
 
 und einen technischen Exception Handler über das Controler Advice, dass global für alle Controller gültig ist. 
 
 ```java
 @ControllerAdvice
-public class PersistenceControllerAdvice {
+public class PersistenceControllerAdvice extends ResponseEntityExceptionHandler {
     
-    @ExceptionHandler(value = PersistenceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public Problem exception(PersistenceException exception) {
-		return new Problem(URI.create("http://thinkenterprise.com"), 
-	            "Persistence Exception", 
-	            HttpStatus.BAD_REQUEST, 
-	            exception.getMessage());
 
-    }
+	@ExceptionHandler(value = PersistenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail exception(PersistenceException exception) {
+		
+		        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		        problemDetail.setType(URI.create("http://thinkenterprise.com/PersistenceException"));
+		        problemDetail.setTitle( "General Persistence Exception");
+		        problemDetail.setDetail(exception.getMessage());
+		        return problemDetail;
+		 }
+
 }
+
 ```
 
 
