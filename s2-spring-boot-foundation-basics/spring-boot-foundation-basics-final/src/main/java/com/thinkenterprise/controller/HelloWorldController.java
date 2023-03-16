@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  *
+ * @author Rafael Kansy
  * @author Michael Schaefer
  */
 
@@ -29,4 +30,5 @@ public class HelloWorldController {
     public String index() {
         return "index";
     }
+	
 }

@@ -17,65 +17,47 @@
   ~ @author Michael Schaefer
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.thinkenterprise</groupId>
-    <artifactId>s2-spring-boot-foundation-basics-start</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+	<groupId>com.thinkenterprise</groupId>
+	<artifactId>s2-spring-boot-foundation-basics-start</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-    <properties>
-       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-		<java.version>17</java.version>
-		<spring.boot.version>3.0.2</spring.boot.version>
-    </properties>
-
-    <!--
-     <dependencyManagement>
-        <dependencies>
-            <dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    -->
+	<!-- Include Spring Boot Maven Pom -->
 	<!-- 
-   <build>
-        <plugins>
-           <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal></goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-     -->
-    <!--
-    <repositories>
-     <repository>
-        <id>spring-repo</id>
-        <name>Spring Repository</name>
-        <url>http://repo.spring.io/release</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-     </repository>
-    </repositories>
-    -->
+	<parent>
+	</parent>
+	-->
+
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+
+	<dependencies>
+		<!-- Enable thymeleaf -->
+		<!-- 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		-->
+		<!-- Add Web Starter  -->
+	</dependencies>
+
+	<build>
+	<!-- Add missing Plugins-->
+		<plugins></plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>spring-repo</id>
+			<name>Spring Repository</name>
+			<url>http://repo.spring.io/release</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
 </project>
