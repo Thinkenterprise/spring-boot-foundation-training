@@ -1,37 +1,28 @@
 ## Aufgabe 
 
-Die Fluggesellschaft stellt einen Route-Service bereit, über den die Routen der Fluggesellschaft bearbeitet werden können. Dazu wurden bereits Repositories implementiert. Nun sollen die elementaren CRUD-Operationen über ein REST-API über Spring MVC bereitgestellt werden.
+Die Fluggesellschaft stellt einen Route-Service bereit, über den die Routen der Fluggesellschaft bearbeitet werden können. Dazu wurden bereits Repositories implementiert. Nun soll ein REST-API über Spring MVC bereitgestellt werden, über das eine Route angelegt und eine bestimmte Route gelesen werden kann. 
+- Erstellen Sie den REST-Controller, über den das API bereitgestellt wird. 
+- Erstellen Sie einen Test, der das korrekte Lesen einer bestimmten Route überprüft.   
 
-1. Erstellen Sie den REST-Controller, der die CRUD-Operationen über ein REST- API bereitstellt.
-2. Erstellen Sie einen Test, der beispielhaft eine Methode des REST-API testet.
-3. Validieren Sie ein Attribut der Route und aktivieren Sie die Validierung in Ihrem REST-Controller.
-4. Führen Sie eine Fehlerbehandlung ein, sobald eine Route über das REST-API nicht gefunden werden kann.
- 
+Die Lösungen zum REST Client zur Validierung und Exception Handling können zusätzlich implementiert werden können, sofern Zeit vorhanden ist. 
 
-## Rest Controller implementieren 
+## REST Controller implementieren 
 
 Hier ist nur eine der CRUD Operationen beispielhaft gezeigt.      
 
 
 ```java
-@RestController
-@RequestMapping("routes")
-public class RouteController {
-
-    @Autowired
-    private RouteService service;
-
-  
-	@RequestMapping(method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Iterable<Route>> getAll() {
-		Iterable<Route> result = service.findAll();
-		return new ResponseEntity<Iterable<Route>>(service.findAll(),HttpStatus.OK);
+	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Route> get(@PathVariable(value = "id") Long id) {
+		return new ResponseEntity<Route>(service.findById(id), HttpStatus.OK);
 	}
 	
-	
-}
-
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Route> post(@Validated @RequestBody Route entity) {
+		return new ResponseEntity<Route>(service.save(entity), HttpStatus.CREATED);
+	}
 ```
+
 
 ## Test Rest Controller implementieren 
 
@@ -52,21 +43,39 @@ Hier ist nur zwei TEST für zwei CRUD-Operationen beispielhaft gezeigt.
 
 	}
 	
-	@Test
-	public void getAll() {
 
-		ResponseEntity<Iterable<Route>> routeResponse = restTemplate.exchange("/routes", HttpMethod.GET, null,
-				new ParameterizedTypeReference<Iterable<Route>>() {
-				});
+```
 
-		Iterable<Route> iterable = routeResponse.getBody();
 
-		Assertions.assertEquals(HttpStatus.OK, routeResponse.getStatusCode());
-		Assertions.assertNotNull(routeResponse.getBody());
-		Assertions.assertNotNull(iterable.iterator().hasNext());
+## REST Client implementieren 
 
+```java
+@SpringBootApplication
+public class Application implements CommandLineRunner {
+	
+	public final static Logger logger = LoggerFactory.getLogger(Application.class);
+	
+	@Autowired RestTemplate restTemplate;
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+	@Override
+	public void run(String... args) throws Exception {
+		
+		ResponseEntity<Route> routeEntity;
+		
+		try {
+			routeEntity = this.restTemplate.getForEntity("/routes/{id}", Route.class, "110000");
+		} catch (HttpClientErrorException e) {
+			ProblemDetail problemDetail= e.getResponseBodyAs(ProblemDetail.class);
+			logger.info(problemDetail.getTitle());
+		}
+		
 	}
-
+        
+}
 ```
 
 

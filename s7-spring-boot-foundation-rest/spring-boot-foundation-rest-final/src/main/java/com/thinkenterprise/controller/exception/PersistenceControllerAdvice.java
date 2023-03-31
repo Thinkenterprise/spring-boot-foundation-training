@@ -23,6 +23,7 @@ import java.net.URI;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,17 +37,15 @@ import jakarta.persistence.PersistenceException;
 
 @ControllerAdvice
 public class PersistenceControllerAdvice extends ResponseEntityExceptionHandler {
-    
 
 	@ExceptionHandler(value = PersistenceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail exception(PersistenceException exception) {
-		
-		        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-		        problemDetail.setType(URI.create("http://thinkenterprise.com/PersistenceException"));
-		        problemDetail.setTitle( "General Persistence Exception");
-		        problemDetail.setDetail(exception.getMessage());
-		        return problemDetail;
-		 }
+	public ResponseEntity<ProblemDetail> exception(PersistenceException exception) {
+		ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		problemDetail.setType(URI.create("http://thinkenterprise.com/PersistenceException"));
+		problemDetail.setTitle("General Persistence Exception");
+		problemDetail.setDetail(exception.getMessage());
+
+		return new ResponseEntity<ProblemDetail>(problemDetail, HttpStatus.BAD_REQUEST);
+	}
 
 }

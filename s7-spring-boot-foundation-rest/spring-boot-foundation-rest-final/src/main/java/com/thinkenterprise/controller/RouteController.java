@@ -96,14 +96,13 @@ public class RouteController {
 	}
 
 	@ExceptionHandler(value = RouteNotFoundException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	ProblemDetail hndleException(RouteNotFoundException exception) {
+	ResponseEntity<ProblemDetail> handleException(RouteNotFoundException exception) {
 		ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
 		problemDetail.setType(URI.create("http://thinkenterprise.com/RouteNotFoundException"));
 		problemDetail.setTitle("Route not found");
 		problemDetail.setDetail(exception.getMessage());
 
-		return problemDetail;
+		return new ResponseEntity<ProblemDetail>(problemDetail, HttpStatus.BAD_REQUEST);
 	}
 
 }
