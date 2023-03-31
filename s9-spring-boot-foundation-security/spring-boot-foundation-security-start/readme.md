@@ -59,10 +59,11 @@ public class SecurityConfiguration {
 
 ```java
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
-
+@EnableMethodSecurity // hinzufügen
+public class SecurityConfiguration {
+	...
 }
+
 ```
  
 ## Method Based Security hinzufügen  
