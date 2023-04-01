@@ -105,11 +105,21 @@ Das erstellte Docker Image kan über **docker images** aufgelistet und über
 docker run -it -p 8080:8080 s2-spring-boot-foundation-basics-final:0.0.1-SNAPSHOT
 ```
 
+und unter Windows mit Git Bash.
+
+
+```
+winpty docker run -it -p 8080:8080 s2-spring-boot-foundation-basics-final:0.0.1-SNAPSHOT
+```
+
 getstartet werden. 
 
 ## AOT Native Build as Executable 
 
 Für den AOT Native Build als Executable ist der folgende Befehl auszuführen. 
+
+
+Unter Windows kann nicht unter der Git Bash sondern unter muss über die **x64 Native Tools Command Prompt** gebaut werden. 
 
 
 ```

@@ -21,6 +21,8 @@
 package com.thinkenterprise;
 
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,6 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		
 		ResponseEntity<Route> routeEntity;
 		
 		try {
@@ -57,6 +58,7 @@ public class Application implements CommandLineRunner {
 			ProblemDetail problemDetail= e.getResponseBodyAs(ProblemDetail.class);
 			logger.info(problemDetail.getTitle());
 		}
+		
 		
 		
 	}
