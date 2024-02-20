@@ -43,28 +43,31 @@ public class RouteController {
 ```java
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RouteControllerTest {
-	
-	@Autowired
-	private TestRestTemplate testRestTemplate;
-	
-	@Autowired
-	private RouteController routeController;
 
-	
-	@Test
-	public void testHelloWorld() {
-		
-		String result = testRestTemplate.getForObject("/helloWorld", String.class);
-		Assertions.assertTrue(result.contentEquals("Hello World"));
+    @Autowired
+    private RouteController routeController;
 
-	}
-	
-	@Test
-	public void testHelloWorldOnController() {
-		String result = routeController.helloWorld();
-		Assertions.assertTrue(result.contentEquals("Hello World"));
-		
-	}
+    @LocalServerPort
+    int port;
+    
+    private RestClient restClient;
+
+    @BeforeEach
+    void setUp() {
+        restClient = RestClient.create("http://localhost:" + port);
+    }
+
+    @Test
+    public void testHelloWorld() {
+        String result = restClient.get().uri("/helloWorld").retrieve().body(String.class);
+        assertThat(result).isEqualTo("Hello World");
+    }
+
+    @Test
+    public void testHelloWorldOnController() {
+        String result = routeController.helloWorld();
+        assertThat(result).isEqualTo("Hello World");
+    }
 }
 ```
 
