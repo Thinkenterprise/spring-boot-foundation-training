@@ -20,153 +20,163 @@
 
 package com.thinkenterprise.test;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinkenterprise.domain.route.Flight;
 import com.thinkenterprise.domain.route.Route;
 import com.thinkenterprise.repository.RouteRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClient;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {"server.port=8080"})
 public class RouteControllerTest {
 
-	@Autowired
-	private TestRestTemplate restTemplate;
+    @Autowired
+    private RouteRepository routeRepository;
 
-	@Autowired
-	private RouteRepository routeRepository;
+    private RestClient restClient;
 
-	@Test
-	public void post() {
+    @BeforeEach
+    void setUp() {
+        restClient = RestClient.create("http://localhost:8080");
+    }
 
-		Route route = new Route("LH2345", "DUS", "BER");
+    @Test
+    public void post() {
 
-		Flight flight = new Flight(120.45, LocalDate.of(2015, 9, 23));
-		route.addFlight(flight);
+        Route route = new Route("LH2345", "DUS", "BER");
 
-		flight = new Flight(111.45, LocalDate.of(2015, 9, 24));
-		route.addFlight(flight);
+        Flight flight = new Flight(120.45, LocalDate.of(2015, 9, 23));
+        route.addFlight(flight);
 
-		ResponseEntity<Route> result = restTemplate.postForEntity("/routes", route, Route.class);
+        flight = new Flight(111.45, LocalDate.of(2015, 9, 24));
+        route.addFlight(flight);
 
-		Assertions.assertEquals(HttpStatus.CREATED, result.getStatusCode());
-		Assertions.assertNotNull(result.getBody());
-		Assertions.assertEquals("LH2345", result.getBody().getFlightNumber());
+        ResponseEntity<Route> result = restClient.post()
+                .uri("/routes")
+                .contentType(APPLICATION_JSON)
+                .body(route)
+                .retrieve()
+                .toEntity(Route.class);
 
-	}
+        Assertions.assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        Assertions.assertNotNull(result.getBody());
+        Assertions.assertEquals("LH2345", result.getBody().getFlightNumber());
 
-	@Test
-	public void postValidated() {
+    }
 
-		Route route = new Route(null, "DUS", "BER");
+    @Test
+    public void postValidated() {
 
-		Flight flight = new Flight(120.45, LocalDate.of(2015, 9, 23));
-		route.addFlight(flight);
+        Route route = new Route(null, "DUS", "BER");
 
-		flight = new Flight(111.45, LocalDate.of(2015, 9, 24));
-		route.addFlight(flight);
+        Flight flight = new Flight(120.45, LocalDate.of(2015, 9, 23));
+        route.addFlight(flight);
 
-		ResponseEntity<Route> result = restTemplate.postForEntity("/routes", route, Route.class);
+        flight = new Flight(111.45, LocalDate.of(2015, 9, 24));
+        route.addFlight(flight);
 
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+        restClient.post()
+                .uri("/routes")
+                .contentType(APPLICATION_JSON)
+                .body(route)
+                .retrieve()
+                .onStatus(httpStatusCode -> !httpStatusCode.isSameCodeAs(BAD_REQUEST),
+                        (request, response) -> fail())
+                .onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(BAD_REQUEST),
+                        (request, response) -> assertTrue(response.getStatusCode().isSameCodeAs(BAD_REQUEST)))
+                .toEntity(Route.class);
+    }
 
-	}
+    @Test
+    public void update() {
 
-	@Test
-	public void update() {
+        Route route = new Route("LH2345", "DUS", "MUC");
+        route.setId(101L);
 
-		Map<String, String> keys = new HashMap<>();
-		keys.put("id", "101");
+        restClient.put()
+                .uri("/routes")
+                .contentType(APPLICATION_JSON)
+                .body(route)
+                .retrieve()
+                .toBodilessEntity();
 
-		Route route = new Route("LH2345", "DUS", "MUC");
-		route.setId(101L);
+        Route changedRoute = routeRepository.findById(101L).get();
 
-		restTemplate.put("/routes", route, keys);
+        Assertions.assertEquals(route.getFlightNumber(), changedRoute.getFlightNumber());
+    }
 
-		Route changedRoute = routeRepository.findById(101L).get();
+    @Test
+    public void delete() {
 
-		Assertions.assertEquals(route.getFlightNumber(), changedRoute.getFlightNumber());
+        restClient.delete().uri("/routes/103").retrieve().toBodilessEntity();
 
-	}
+        var optional = routeRepository.findById(103L);
 
-	@Test
-	public void delete() {
+        assertTrue(optional.isEmpty());
+    }
 
-		Map<String, String> keys = new HashMap<>();
-		keys.put("id", "103");
+    @Test
+    public void get() {
 
-		restTemplate.delete("/routes/{id}", keys);
+        ResponseEntity<Route> routeEntity = restClient.get()
+                .uri("/routes/101")
+                .retrieve()
+                .toEntity(Route.class);
 
-		Optional optional = routeRepository.findById(103L);
+        Assertions.assertEquals(HttpStatus.OK, routeEntity.getStatusCode());
+        Assertions.assertNotNull(routeEntity.getBody());
+        Assertions.assertEquals(101L, routeEntity.getBody().getId().longValue());
 
-		Assertions.assertTrue(!optional.isPresent());
-	}
-
-	@Test
-	public void get() {
-
-		Map<String, String> keys = new HashMap<>();
-		keys.put("id", "101");
-
-		ResponseEntity<Route> routeEntity = this.restTemplate.getForEntity("/routes/{id}", Route.class, keys);
-		Assertions.assertEquals(HttpStatus.OK, routeEntity.getStatusCode());
-		Assertions.assertNotNull(routeEntity.getBody());
-		Assertions.assertEquals(101L, routeEntity.getBody().getId().longValue());
-
-	}
+    }
 
 
-	@Test
-	public void getNotFound() throws Exception {
+    @Test
+    public void getNotFound() {
+        restClient.get()
+                .uri("/routes/110000")
+                .exchange(((clientRequest, clientResponse) -> {
+                    assertTrue(clientResponse.getStatusCode().isSameCodeAs(BAD_REQUEST));
+                    var objectMapper = new ObjectMapper();
+                    return objectMapper.readValue(clientResponse.getBody(), ProblemDetail.class);
+                }));
+    }
 
-		Map<String, String> keys = new HashMap<>();
-		keys.put("id", "110000");
+    @Test
+    public void getPersistenceException() throws Exception {
+        restClient.get()
+                .uri("/routes/120000")
+                .exchange(((clientRequest, clientResponse) -> {
+                    assertTrue(clientResponse.getStatusCode().isSameCodeAs(BAD_REQUEST));
+                    var objectMapper = new ObjectMapper();
+                    return objectMapper.readValue(clientResponse.getBody(), ProblemDetail.class);
+                }));
+    }
 
-		ResponseEntity<ProblemDetail> problem = this.restTemplate.getForEntity("/routes/{id}", ProblemDetail.class, keys);
+    @Test
+    public void getAll() {
+        ResponseEntity<Iterable<Route>> routeResponse  = restClient.get()
+                .uri("/routes")
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {});
 
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), problem.getBody().getStatus());
-
-	}
-
-	@Test
-	public void getPersisctenceException() throws Exception {
-
-		Map<String, String> keys = new HashMap<>();
-		keys.put("id", "120000");
-
-		ResponseEntity<ProblemDetail> problem = this.restTemplate.getForEntity("/routes/{id}", ProblemDetail.class, keys);
-
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, problem.getStatusCode());
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), problem.getBody().getStatus());
-	}
-
-	@Test
-	public void getAll() {
-
-		ResponseEntity<Iterable<Route>> routeResponse = restTemplate.exchange("/routes", HttpMethod.GET, null,
-				new ParameterizedTypeReference<Iterable<Route>>() {
-				});
-
-		Iterable<Route> iterable = routeResponse.getBody();
-
-		Assertions.assertEquals(HttpStatus.OK, routeResponse.getStatusCode());
-		Assertions.assertNotNull(routeResponse.getBody());
-		Assertions.assertNotNull(iterable.iterator().hasNext());
-
-	}
+        Assertions.assertEquals(HttpStatus.OK, routeResponse.getStatusCode());
+        Assertions.assertNotNull(routeResponse.getBody());
+        Assertions.assertNotNull(routeResponse.getBody().iterator().hasNext());
+    }
 
 }

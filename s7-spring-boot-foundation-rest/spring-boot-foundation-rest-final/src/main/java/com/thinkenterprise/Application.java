@@ -21,46 +21,45 @@
 package com.thinkenterprise;
 
 
-import java.util.Optional;
-
+import com.thinkenterprise.domain.route.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
-import com.thinkenterprise.domain.route.Route;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 	
 	public final static Logger logger = LoggerFactory.getLogger(Application.class);
 	
-	@Autowired RestTemplate restTemplate;
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		ResponseEntity<Route> routeEntity;
-		
-		try {
-			routeEntity = this.restTemplate.getForEntity("/routes/{id}", Route.class, "101");
-		} catch (HttpClientErrorException e) {
-			ProblemDetail problemDetail= e.getResponseBodyAs(ProblemDetail.class);
-			logger.info(problemDetail.getTitle());
-		}
-		
-		
-		
+		RestClient restClient = RestClient.create("http://localhost:8080");
+
+		ResponseEntity<Route> route = restClient.get()
+				.uri("/routes/101")
+				.retrieve()
+				.toEntity(Route.class);
+
+		logger.info("### Response Status {}", route.getStatusCode());
+
+
+		restClient.get()
+				.uri("/routes/110000")
+				.retrieve()
+				.onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(BAD_REQUEST), ((request, response) -> {
+					logger.error("### Response Status {}", response.getStatusCode());
+				}))
+				.toEntity(Route.class);
 	}
         
 }

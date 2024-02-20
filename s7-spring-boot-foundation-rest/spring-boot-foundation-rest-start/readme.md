@@ -26,20 +26,21 @@ Hier ist nur eine der CRUD Operationen beispielhaft gezeigt.
 
 ## Test Rest Controller implementieren 
 
-Hier ist nur zwei TEST für zwei CRUD-Operationen beispielhaft gezeigt.      
+Hier ist nur ein TEST für eine der beiden CRUD-Operationen beispielhaft gezeigt.      
 
 
 ```java
 	@Test
 	public void get() {
 
-		Map<String, String> keys = new HashMap<>();
-		keys.put("id", "101");
-
-		ResponseEntity<Route> routeEntity = this.restTemplate.getForEntity("/routes/{id}", Route.class, keys);
-		Assertions.assertEquals(HttpStatus.OK, routeEntity.getStatusCode());
-		Assertions.assertNotNull(routeEntity.getBody());
-		Assertions.assertEquals(101L, routeEntity.getBody().getId().longValue());
+            ResponseEntity<Route> routeEntity = restClient.get()
+                    .uri("/routes/101")
+                    .retrieve()
+                    .toEntity(Route.class);
+        
+            Assertions.assertEquals(HttpStatus.OK, routeEntity.getStatusCode());
+            Assertions.assertNotNull(routeEntity.getBody());
+            Assertions.assertEquals(101L, routeEntity.getBody().getId().longValue());
 
 	}
 	
@@ -55,23 +56,30 @@ public class Application implements CommandLineRunner {
 	
 	public final static Logger logger = LoggerFactory.getLogger(Application.class);
 	
-	@Autowired RestTemplate restTemplate;
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+            SpringApplication.run(Application.class, args);
+        }
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		ResponseEntity<Route> routeEntity;
-		
-		try {
-			routeEntity = this.restTemplate.getForEntity("/routes/{id}", Route.class, "110000");
-		} catch (HttpClientErrorException e) {
-			ProblemDetail problemDetail= e.getResponseBodyAs(ProblemDetail.class);
-			logger.info(problemDetail.getTitle());
-		}
+
+            RestClient restClient = RestClient.create("http://localhost:8080");
+    
+            ResponseEntity<Route> route = restClient.get()
+                    .uri("/routes/101")
+                    .retrieve()
+                    .toEntity(Route.class);
+    
+            logger.info("### Response Status {}", route.getStatusCode());
+    
+    
+            restClient.get()
+                    .uri("/routes/110000")
+                    .retrieve()
+                    .onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(BAD_REQUEST), ((request, response) -> {
+                        logger.error("### Response Status {}", response.getStatusCode());
+                    }))
+                    .toEntity(Route.class);
 		
 	}
         
@@ -126,7 +134,7 @@ Sie können zwei Exception Handler definieren
 Einen Exception Handler auf fachlicher eben im RouteController 
 
 ```java
- @ExceptionHandler(value = RouteNotFoundException.class)
+        @ExceptionHandler(value = RouteNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ProblemDetail hndleException(RouteNotFoundException exception) {
 		ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -146,15 +154,16 @@ public class PersistenceControllerAdvice extends ResponseEntityExceptionHandler 
     
 
 	@ExceptionHandler(value = PersistenceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail exception(PersistenceException exception) {
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        public ProblemDetail exception(PersistenceException exception) {
 		
-		        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-		        problemDetail.setType(URI.create("http://thinkenterprise.com/PersistenceException"));
-		        problemDetail.setTitle( "General Persistence Exception");
-		        problemDetail.setDetail(exception.getMessage());
-		        return problemDetail;
-		 }
+            ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+            problemDetail.setType(URI.create("http://thinkenterprise.com/PersistenceException"));
+            problemDetail.setTitle( "General Persistence Exception");
+            problemDetail.setDetail(exception.getMessage());
+            
+            return problemDetail;
+        }
 
 }
 
