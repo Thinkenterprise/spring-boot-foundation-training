@@ -47,7 +47,7 @@ public class RouteController {
 		return new ResponseEntity<Iterable<Route>>(service.findAll(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_PROBLEM_JSON_VALUE})
+	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Route> get(@PathVariable(value = "id") Long id) {
 		if (id == 110000L)
 			throw new RouteNotFoundException("Route not Found Exception");
