@@ -19,34 +19,20 @@
 
 package com.thinkenterprise.controller;
 
-import java.net.URI;
-import java.util.Optional;
-
+import com.thinkenterprise.domain.route.Route;
+import com.thinkenterprise.domain.route.RouteNotFoundException;
+import com.thinkenterprise.service.RouteService;
+import jakarta.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.ErrorResponseException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.*;
 
-import com.thinkenterprise.domain.core.Problem;
-import com.thinkenterprise.domain.route.Route;
-import com.thinkenterprise.domain.route.RouteNotFoundException;
-import com.thinkenterprise.service.RouteService;
-
-import jakarta.persistence.PersistenceException;
+import java.net.URI;
 
 @RestController
 @RequestMapping("routes")
@@ -93,6 +79,11 @@ public class RouteController {
 	@RequestMapping(value = "search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Iterable<Route>> findByDeparture(@RequestParam(value = "departure") String departure) {
 		return new ResponseEntity<Iterable<Route>>(service.findAll(), HttpStatus.OK);
+	}
+
+	@GetMapping("threads")
+	public ResponseEntity<String> readThread() {
+		return ResponseEntity.ok(Thread.currentThread().toString());
 	}
 
 	@ExceptionHandler(value = RouteNotFoundException.class)
