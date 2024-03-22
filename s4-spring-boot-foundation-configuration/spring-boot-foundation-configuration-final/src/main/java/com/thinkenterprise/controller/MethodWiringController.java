@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// Nicht Best Practice!!!
 @RestController
 @RequestMapping("/mwiring/")
 public class MethodWiringController {
