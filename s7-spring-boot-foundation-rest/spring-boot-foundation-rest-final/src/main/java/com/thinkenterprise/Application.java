@@ -21,20 +21,24 @@
 package com.thinkenterprise;
 
 
+import com.thinkenterprise.domain.core.Problem;
 import com.thinkenterprise.domain.route.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
-	
+
 	public final static Logger logger = LoggerFactory.getLogger(Application.class);
 	
     public static void main(String[] args) {
@@ -42,7 +46,7 @@ public class Application implements CommandLineRunner {
     }
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 		RestClient restClient = RestClient.create("http://localhost:8080");
 
 		ResponseEntity<Route> route = restClient.get()
@@ -52,14 +56,18 @@ public class Application implements CommandLineRunner {
 
 		logger.info("### Response Status {}", route.getStatusCode());
 
-
-		restClient.get()
-				.uri("/routes/110000")
-				.retrieve()
-				.onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(BAD_REQUEST), ((request, response) -> {
-					logger.error("### Response Status {}", response.getStatusCode());
-				}))
-				.toEntity(Route.class);
+		try {
+			restClient.get()
+					.uri("/routes/110000")
+					.retrieve()
+//				.onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(BAD_REQUEST), ((request, response) -> {
+//					logger.error("### Response Status {}", response.getStatusCode());
+//				}))
+					.toEntity(Route.class);
+		} catch (HttpClientErrorException e) {
+			ProblemDetail problemDetail = e.getResponseBodyAs(ProblemDetail.class);
+			logger.error(problemDetail.getTitle());
+		}
 	}
         
 }
