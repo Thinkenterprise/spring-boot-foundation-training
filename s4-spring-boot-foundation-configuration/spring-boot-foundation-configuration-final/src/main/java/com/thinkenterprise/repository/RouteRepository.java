@@ -44,7 +44,7 @@ public class RouteRepository {
             public boolean test(Route route) {
                 return route.getDeparture().equals(departure);
             }
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
    
