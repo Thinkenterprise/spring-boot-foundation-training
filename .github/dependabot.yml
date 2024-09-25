@@ -9,3 +9,6 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "spring-boot*"
+        update-types: ["version-update:semver-major"]
