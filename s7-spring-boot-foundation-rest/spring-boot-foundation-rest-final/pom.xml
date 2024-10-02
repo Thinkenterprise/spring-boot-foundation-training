@@ -23,7 +23,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<java.version>17</java.version>
 		<spring.boot.version>3.3.4</spring.boot.version>
-		<maven.surefire.version>3.2.5</maven.surefire.version>
+		<maven.surefire.version>3.5.0</maven.surefire.version>
 	</properties>
 
 	<dependencyManagement>
