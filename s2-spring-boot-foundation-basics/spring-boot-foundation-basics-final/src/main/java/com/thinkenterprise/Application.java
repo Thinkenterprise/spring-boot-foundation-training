@@ -35,7 +35,6 @@ import com.thinkenterprise.customize.HelloWorldSpringApplicationEventListener;
 public class Application implements ApplicationRunner {
 
 	public static void main(String[] args) {
-
 		SpringApplication springApplication = new SpringApplication(Application.class);
 
 		springApplication.addListeners(new HelloWorldSpringApplicationEventListener());

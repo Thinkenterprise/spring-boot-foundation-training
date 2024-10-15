@@ -58,7 +58,6 @@ public class RouteService {
     		routeRepository.save(routeFirst);
         	routeRepository.save(routeRecond);
         	routeRepository.save(routeThird);
-        	
 		} catch (DataAccessException e) {
 			throw new SomethingGoesWrongException("SomethingGoesWrongException");
 		}
