@@ -30,6 +30,8 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 import com.thinkenterprise.customize.HelloWorldSpringApplicationContextInitializer;
 import com.thinkenterprise.customize.HelloWorldSpringApplicationEventListener;
 
+import java.util.Arrays;
+
 @SpringBootApplication(exclude = { H2ConsoleAutoConfiguration.class }, scanBasePackageClasses = { Application.class })
 @ImportRuntimeHints(ApplicationRuntimeHints.class)
 public class Application implements ApplicationRunner {
@@ -45,9 +47,8 @@ public class Application implements ApplicationRunner {
 	}
 
 	@Override
-	public void run(ApplicationArguments args) throws Exception {
+	public void run(ApplicationArguments args) {
 		System.out.println("Here you can initialize your application ...");
-		System.out.println(args.getSourceArgs());
-
+		System.out.println(Arrays.toString(args.getSourceArgs()));
 	}
 }

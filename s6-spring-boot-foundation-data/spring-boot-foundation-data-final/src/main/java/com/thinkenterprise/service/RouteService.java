@@ -20,17 +20,15 @@
 
 package com.thinkenterprise.service;
 
-import java.util.List;
-
-import org.junit.jupiter.api.Disabled;
+import com.thinkenterprise.domain.route.Route;
+import com.thinkenterprise.domain.route.SomethingGoesWrongException;
+import com.thinkenterprise.repository.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.thinkenterprise.domain.route.Route;
-import com.thinkenterprise.domain.route.SomethingGoesWrongException;
-import com.thinkenterprise.repository.RouteRepository;
+import java.util.List;
 
 
 @Service
