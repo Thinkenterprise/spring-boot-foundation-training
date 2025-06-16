@@ -1,15 +1,20 @@
 package com.thinkenterprise.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.thinkenterprise.service.RouteService;
 
 @RestController
 public class RouteController {
 	
+	@Autowired
+	RouteService routeService;
+
 	@RequestMapping("/helloWorld")
 	public String helloWorld() {
-		return "Hello World";
-		
+		return routeService.getHelloWorld();
 	}
 
 }
