@@ -19,6 +19,8 @@
 
 package com.thinkenterprise;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -36,6 +38,9 @@ import java.util.Arrays;
 @ImportRuntimeHints(ApplicationRuntimeHints.class)
 public class Application implements ApplicationRunner {
 
+	private static Logger logger = LoggerFactory.getLogger(Application.class);
+
+
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication(Application.class);
 
@@ -48,7 +53,7 @@ public class Application implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) {
-		System.out.println("Here you can initialize your application ...");
-		System.out.println(Arrays.toString(args.getSourceArgs()));
+		logger.info("Here you can initialize your application ...");
+		logger.info(Arrays.toString(args.getSourceArgs()));
 	}
 }
