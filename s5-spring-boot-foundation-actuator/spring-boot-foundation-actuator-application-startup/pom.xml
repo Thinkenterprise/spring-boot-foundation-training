@@ -22,7 +22,7 @@
 		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<spring.boot.version>3.5.5</spring.boot.version>
+		<spring.boot.version>3.5.6</spring.boot.version>
 		<jakarta.servlet.api.version>6.1.0</jakarta.servlet.api.version>
 	</properties>
 
