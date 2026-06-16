@@ -25,7 +25,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
@@ -34,7 +33,7 @@ import com.thinkenterprise.customize.HelloWorldSpringApplicationEventListener;
 
 import java.util.Arrays;
 
-@SpringBootApplication(exclude = { H2ConsoleAutoConfiguration.class }, scanBasePackageClasses = { Application.class })
+@SpringBootApplication(scanBasePackageClasses = { Application.class })
 @ImportRuntimeHints(ApplicationRuntimeHints.class)
 public class Application implements ApplicationRunner {
 
