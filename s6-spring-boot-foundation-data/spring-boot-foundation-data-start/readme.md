@@ -54,6 +54,26 @@ public interface RouteRepository extends CrudRepository<Route, Long> {
 
 
 
+## Test Dependencies hinzufügen
+
+Für den Test-Slice werden die Test-Starter benötigt. Ab Spring Boot 4 ist der
+JPA-Test-Slice in ein eigenes Modul ausgelagert, daher zusätzlich
+`spring-boot-starter-data-jpa-test`:
+
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-test</artifactId>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-jpa-test</artifactId>
+	<scope>test</scope>
+</dependency>
+```
+
+
 ## Test schreiben   
 
 
