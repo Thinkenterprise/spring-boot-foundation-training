@@ -37,16 +37,15 @@ import org.springframework.core.env.Environment;
  *       {@code BeanDefinitionRegistryPostProcessor} ab).</li>
  * </ol>
  *
- * <p>Der {@code BeanRegistrar} wird <b>nur dann aktiv</b>, wenn man ihn auf einer
- * {@code @Configuration} importiert. Das ist hier <b>bewusst nicht</b> gemacht,
- * damit der laufende Anwendungs-Context unveraendert bleibt &ndash; die Klasse
- * dient ausschliesslich der Demonstration. So wuerde man ihn einschalten:
- *
- * <pre>{@code
- * @Configuration
- * @Import(ExampleBeanRegistrar.class)
- * public class RegistrarConfig { }
- * }</pre>
+ * <p>Aktiviert wird der Registrar ueber {@link RegistrarConfiguration} (dort per
+ * {@code @Import} eingebunden). Damit die Demo den laufenden Anwendungs-Context
+ * nicht beeinflusst, sind die Beans bewusst nebenwirkungsfrei gehalten:
+ * <ul>
+ *   <li>es sind eigenstaendige Demo-Typen ohne Bezug zum uebrigen Code,</li>
+ *   <li>sie werden mit {@code notAutowirable()} markiert, koennen also nie
+ *       versehentlich in andere Beans injiziert werden,</li>
+ *   <li>Abhaengigkeiten werden eindeutig per Namen aufgeloest.</li>
+ * </ul>
  */
 public class ExampleBeanRegistrar implements BeanRegistrar {
 
@@ -58,29 +57,38 @@ public class ExampleBeanRegistrar implements BeanRegistrar {
     @Override
     public void register(BeanRegistry registry, Environment env) {
 
-        // 1) Einfachste Form: Bean per Typ. Spring instanziiert und verkabelt sie selbst.
+        // 1) Einfachste Form: Bean per Typ. Spring instanziiert sie ueber den
+        //    Default-Konstruktor selbst.
         registry.registerBean(RouteGreeter.class);
 
-        // 2) Mit explizitem Bean-Namen.
-        registry.registerBean("englishGreeter", RouteGreeter.class);
+        // 2) Mit explizitem Namen und Customizer (BeanSpec): eigene Beschreibung,
+        //    eigener Supplier und notAutowirable() - die Bean ist damit kein
+        //    Kandidat fuer Autowiring und kann nichts im Context stoeren.
+        registry.registerBean("germanGreeter", RouteGreeter.class, spec -> spec
+                .description("Deutscher Gruss, programmatisch registriert")
+                .notAutowirable()
+                .supplier(context -> new RouteGreeter("Hallo Welt")));
 
-        // 3) Mit Customizer (BeanSpec): Scope, Lazy-Init, Beschreibung und ein eigener
-        //    Supplier. Ueber context.bean(...) kommt man an bereits registrierte Beans.
-        registry.registerBean(RouteBanner.class, spec -> spec
+        // 3) Voller Customizer: Prototype-Scope, Lazy-Init und ein Supplier, der
+        //    ueber den SupplierContext eine andere Bean EINDEUTIG per Namen holt.
+        registry.registerBean("welcomeBanner", RouteBanner.class, spec -> spec
                 .prototype()
                 .lazyInit()
+                .notAutowirable()
                 .description("Banner, programmatisch registriert")
-                .supplier(context -> new RouteBanner(context.bean(RouteGreeter.class))));
+                .supplier(context -> new RouteBanner(context.bean("germanGreeter", RouteGreeter.class))));
 
         // 4) Bedingte Registrierung ueber das Environment - das programmatische
         //    Pendant zu @Profile (vgl. ProductionConfiguration / TestConfiguration).
         if (env.matchesProfiles("production")) {
-            registry.registerBean("activeGreeter", RouteGreeter.class,
-                    spec -> spec.supplier(context -> new RouteGreeter("Welcome aboard")));
+            registry.registerBean("activeGreeter", RouteGreeter.class, spec -> spec
+                    .notAutowirable()
+                    .supplier(context -> new RouteGreeter("Welcome aboard")));
         }
         else {
-            registry.registerBean("activeGreeter", RouteGreeter.class,
-                    spec -> spec.supplier(context -> new RouteGreeter("Hallo (Test/Default)")));
+            registry.registerBean("activeGreeter", RouteGreeter.class, spec -> spec
+                    .notAutowirable()
+                    .supplier(context -> new RouteGreeter("Hallo (Test/Default)")));
         }
     }
 
