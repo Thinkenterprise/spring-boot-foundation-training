@@ -5,14 +5,13 @@ import com.thinkenterprise.service.RouteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.bean.override.convention.TestBean;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
-import org.springframework.web.client.RestClient;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -20,53 +19,53 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 public class RouteControllerTest {
-	
-	@Autowired
-	RouteController routeController;
 
-	@LocalServerPort
-	int port;
+    private static final String HELLO_WORLD = "Hello World";
 
-	@MockitoBean
-	RouteService routeService;
+    @Autowired
+    RouteController routeController;
 
-	@TestBean
-	private RestClient restClient;
+    @LocalServerPort
+    int port;
 
-	@Autowired
-	private MockMvcTester mockMvcTester;
+    @MockitoBean
+    RouteService routeService;
 
-	public static RestClient restClient() {
-		return RestClient.create("http://localhost:" + 8080);
-	}
+    private RestTestClient restClient;
 
-	@BeforeEach
-	void setUp() {
-		when(routeService.getHelloWorld()).thenReturn("Hello World");
-	}
-	
-	@Test
-	public void testHelloWorld() {
-		String result = restClient.get().uri("/helloWorld").retrieve().body(String.class);
-		assertThat(result).isEqualTo("Hello World");
-	}
+    @Autowired
+    private MockMvcTester mockMvcTester;
 
-	@Test
-	public void testHelloWorldMockMvcTester() {
-		var result = mockMvcTester.get().uri("/helloWorld").exchange();
-		assertThat(result).hasStatusOk().bodyText().contains("Hello World");
-	}
+    @BeforeEach
+    void setUp() {
+        restClient = RestTestClient.bindToServer().baseUrl("http://localhost:" + port).build();
+        when(routeService.getHelloWorld()).thenReturn(HELLO_WORLD);
+    }
 
-	@Test
-	public void testHelloWorldWithMVCMock() {
-		var result = mockMvcTester.get().uri("/").exchange();
-		assertThat(result).hasStatusOk();
-		assertThat(result).hasViewName("index");
-	}
-	
-	@Test
-	public void testHelloWorldOnController() {
-		String result = routeController.helloWorld();
-		assertThat(result).isEqualTo("Hello World");
-	}
+    @Test
+    public void testHelloWorld() {
+        restClient.get().uri("/helloWorld")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo(HELLO_WORLD);
+    }
+
+    @Test
+    public void testHelloWorldMockMvcTester() {
+        var result = mockMvcTester.get().uri("/helloWorld").exchange();
+        assertThat(result).hasStatusOk().bodyText().contains("Hello World");
+    }
+
+    @Test
+    public void testHelloWorldWithMVCMock() {
+        var result = mockMvcTester.get().uri("/").exchange();
+        assertThat(result).hasStatusOk();
+        assertThat(result).hasViewName("index");
+    }
+
+    @Test
+    public void testHelloWorldOnController() {
+        String result = routeController.helloWorld();
+        assertThat(result).isEqualTo("Hello World");
+    }
 }
