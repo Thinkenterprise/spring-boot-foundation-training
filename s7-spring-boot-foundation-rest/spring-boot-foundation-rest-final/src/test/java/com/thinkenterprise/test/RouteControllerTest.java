@@ -20,7 +20,7 @@
 
 package com.thinkenterprise.test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.thinkenterprise.domain.route.Flight;
 import com.thinkenterprise.domain.route.Route;
 import com.thinkenterprise.repository.RouteRepository;

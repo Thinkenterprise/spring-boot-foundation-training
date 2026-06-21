@@ -20,19 +20,23 @@
 
 package com.thinkenterprise.config;
 
+import com.thinkenterprise.driver.RouteRepositoryDriver;
+import com.thinkenterprise.driver.TestRouteRepositoryDriver;
+import com.thinkenterprise.repository.RouteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.thinkenterprise.driver.RouteRepositoryDriver;
-import com.thinkenterprise.driver.TestRouteRepositoryDriver;
-import com.thinkenterprise.repository.RouteRepository;
-
 @Configuration
 @Profile("test")
 @ConditionalOnClass(RouteRepository.class)
 public class TestConfiguration {
+
+    // Nur zur Demonstration der Enable bzw. Scan Funktion für ConfigurationProperties in der Application.java
+    @Autowired
+    private RouteProperties routeProperties;
 
     @Bean
     public RouteRepositoryDriver testRouteRepositoryDriver() {
