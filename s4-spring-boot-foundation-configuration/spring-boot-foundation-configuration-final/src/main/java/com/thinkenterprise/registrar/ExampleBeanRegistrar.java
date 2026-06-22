@@ -65,7 +65,7 @@ public class ExampleBeanRegistrar implements BeanRegistrar {
         //    eigener Supplier und notAutowirable() - die Bean ist damit kein
         //    Kandidat fuer Autowiring und kann nichts im Context stoeren.
         registry.registerBean("germanGreeter", RouteGreeter.class, spec -> spec
-                .description("Deutscher Gruss, programmatisch registriert")
+                .description("Gruß, programmatisch registriert")
                 .notAutowirable()
                 .supplier(context -> new RouteGreeter("Hallo Welt")));
 
